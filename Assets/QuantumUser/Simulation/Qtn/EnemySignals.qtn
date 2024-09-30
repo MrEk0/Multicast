@@ -1,0 +1,2 @@
+signal EntityHit(EntityRef owner, FP damage);
+signal EntityDied();

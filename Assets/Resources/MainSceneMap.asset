@@ -18,7 +18,7 @@ MonoBehaviour:
       Value: 415693643468263483
   UserAsset:
     Id:
-      Value: 272150416117720511
+      Value: 0
   Scene: MainScene
   ScenePath: Assets/Scenes/MainScene.unity
   SceneGuid: 9fc0d4010bbf28b4594072e72b8655ab

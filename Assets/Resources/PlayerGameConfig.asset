@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 412186b376eaa3049a7f3f141a528706, type: 3}
+  m_Name: PlayerGameConfig
+  m_EditorClassIdentifier: 
+  Identifier:
+    Path: Resources/PlayerGameConfig
+    Guid:
+      Value: 371615620826745637
+  _velocity:
+    _initialValue:
+      RawValue: 65536
+    _upgradeStep:
+      RawValue: 32768
+    _upgradeChance:
+      RawValue: 39322
+  _damage:
+    _initialValue:
+      RawValue: 655360
+    _upgradeStep:
+      RawValue: 655360
+    _upgradeChance:
+      RawValue: 19661
+  _attackRadius:
+    _initialValue:
+      RawValue: 131072
+    _upgradeStep:
+      RawValue: 65536
+    _upgradeChance:
+      RawValue: 6554

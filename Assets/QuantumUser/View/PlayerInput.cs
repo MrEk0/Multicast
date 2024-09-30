@@ -1,29 +1,54 @@
-using System.Collections;
-using System.Collections.Generic;
 using Photon.Deterministic;
 using Quantum;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInput : MonoBehaviour
 {
+    private InputActions.PlayerActions _player;
+    private FPVector2 _direction;
+
+    private void Awake()
+    {
+        var inputSystemActions = new InputActions();
+
+        _player = inputSystemActions.Player;
+        _player.Enable();
+    }
+
     private void OnEnable()
     {
         QuantumCallback.Subscribe(this, (CallbackPollInput callback) => PollInput(callback));
+    
+        _player.Move.started += OnMoveStarted;
+        _player.Move.canceled += OnMoveCancelled;
     }
 
-    /// <summary>
-    /// Set an empty input when polled by the simulation.
-    /// </summary>
-    /// <param name="callback"></param>
-    public void PollInput(CallbackPollInput callback)
+    private void OnDisable()
     {
-        Quantum.Input i = new Quantum.Input();
+        _player.Move.performed -= OnMoveStarted;
+        _player.Move.canceled -= OnMoveCancelled;
+    }
 
-        var x = UnityEngine.Input.GetAxis("Horizontal");
-        var y = UnityEngine.Input.GetAxis("Vertical");
+    private void OnMoveStarted(InputAction.CallbackContext value)
+    {
+        var inputMovement = value.ReadValue<Vector2>();
 
-        i.Direction = new FPVector2(x.ToFP(), y.ToFP());
-        
+        _direction = new FPVector2(inputMovement.x.ToFP(), inputMovement.y.ToFP());
+    }
+    
+    private void OnMoveCancelled(InputAction.CallbackContext obj)
+    {
+        _direction = new FPVector2();
+    }
+
+    private void PollInput(CallbackPollInput callback)
+    {
+        var i = new Quantum.Input
+        {
+            Direction = _direction
+        };
+    
         callback.SetInput(i, DeterministicInputFlags.Repeatable);
     }
 }

@@ -1,0 +1,4 @@
+component EntityLevel
+{
+    FP Level;
+}

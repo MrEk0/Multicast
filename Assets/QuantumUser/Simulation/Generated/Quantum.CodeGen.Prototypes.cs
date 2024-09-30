@@ -50,6 +50,38 @@ namespace Quantum.Prototypes {
   #endif //;
   
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.EntityHealth))]
+  public unsafe partial class EntityHealthPrototype : ComponentPrototype<Quantum.EntityHealth> {
+    public FP MaxHealthPoints;
+    public FP HealthPoints;
+    partial void MaterializeUser(Frame frame, ref Quantum.EntityHealth result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.EntityHealth component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.EntityHealth result, in PrototypeMaterializationContext context = default) {
+        result.MaxHealthPoints = this.MaxHealthPoints;
+        result.HealthPoints = this.HealthPoints;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.EntityLevel))]
+  public unsafe partial class EntityLevelPrototype : ComponentPrototype<Quantum.EntityLevel> {
+    public FP Level;
+    partial void MaterializeUser(Frame frame, ref Quantum.EntityLevel result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.EntityLevel component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.EntityLevel result, in PrototypeMaterializationContext context = default) {
+        result.Level = this.Level;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Input))]
   public unsafe partial class InputPrototype : StructPrototype {
     public FPVector2 Direction;

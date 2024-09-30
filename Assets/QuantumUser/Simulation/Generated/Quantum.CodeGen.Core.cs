@@ -499,6 +499,46 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct EntityHealth : Quantum.IComponent {
+    public const Int32 SIZE = 16;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(8)]
+    public FP MaxHealthPoints;
+    [FieldOffset(0)]
+    public FP HealthPoints;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 18517;
+        hash = hash * 31 + MaxHealthPoints.GetHashCode();
+        hash = hash * 31 + HealthPoints.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (EntityHealth*)ptr;
+        FP.Serialize(&p->HealthPoints, serializer);
+        FP.Serialize(&p->MaxHealthPoints, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct EntityLevel : Quantum.IComponent {
+    public const Int32 SIZE = 8;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(0)]
+    public FP Level;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 2857;
+        hash = hash * 31 + Level.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (EntityLevel*)ptr;
+        FP.Serialize(&p->Level, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct PlayerLink : Quantum.IComponent {
     public const Int32 SIZE = 4;
     public const Int32 ALIGNMENT = 4;
@@ -516,9 +556,17 @@ namespace Quantum {
         PlayerRef.Serialize(&p->Player, serializer);
     }
   }
+  public unsafe partial interface ISignalEntityHit : ISignal {
+    void EntityHit(Frame f, EntityRef owner, FP damage);
+  }
+  public unsafe partial interface ISignalEntityDied : ISignal {
+    void EntityDied(Frame f);
+  }
   public static unsafe partial class Constants {
   }
   public unsafe partial class Frame {
+    private ISignalEntityHit[] _ISignalEntityHitSystems;
+    private ISignalEntityDied[] _ISignalEntityDiedSystems;
     partial void AllocGen() {
       _globals = (_globals_*)Context.Allocator.AllocAndClear(sizeof(_globals_));
     }
@@ -530,12 +578,18 @@ namespace Quantum {
     }
     partial void InitGen() {
       Initialize(this, this.SimulationConfig.Entities, 256);
+      _ISignalEntityHitSystems = BuildSignalsArray<ISignalEntityHit>();
+      _ISignalEntityDiedSystems = BuildSignalsArray<ISignalEntityDied>();
       _ComponentSignalsOnAdded = new ComponentReactiveCallbackInvoker[ComponentTypeId.Type.Length];
       _ComponentSignalsOnRemoved = new ComponentReactiveCallbackInvoker[ComponentTypeId.Type.Length];
       BuildSignalsArrayOnComponentAdded<CharacterController2D>();
       BuildSignalsArrayOnComponentRemoved<CharacterController2D>();
       BuildSignalsArrayOnComponentAdded<CharacterController3D>();
       BuildSignalsArrayOnComponentRemoved<CharacterController3D>();
+      BuildSignalsArrayOnComponentAdded<Quantum.EntityHealth>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.EntityHealth>();
+      BuildSignalsArrayOnComponentAdded<Quantum.EntityLevel>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.EntityLevel>();
       BuildSignalsArrayOnComponentAdded<MapEntityLink>();
       BuildSignalsArrayOnComponentRemoved<MapEntityLink>();
       BuildSignalsArrayOnComponentAdded<NavMeshAvoidanceAgent>();
@@ -592,6 +646,24 @@ namespace Quantum {
       Physics3D.Init(_globals->PhysicsState3D.MapStaticCollidersState.TrackedMap);
     }
     public unsafe partial struct FrameSignals {
+      public void EntityHit(EntityRef owner, FP damage) {
+        var array = _f._ISignalEntityHitSystems;
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
+            s.EntityHit(_f, owner, damage);
+          }
+        }
+      }
+      public void EntityDied() {
+        var array = _f._ISignalEntityDiedSystems;
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
+            s.EntityDied(_f);
+          }
+        }
+      }
     }
   }
   public unsafe partial class Statics {
@@ -618,6 +690,8 @@ namespace Quantum {
       typeRegistry.Register(typeof(ComponentTypeRef), ComponentTypeRef.SIZE);
       typeRegistry.Register(typeof(DistanceJoint), DistanceJoint.SIZE);
       typeRegistry.Register(typeof(DistanceJoint3D), DistanceJoint3D.SIZE);
+      typeRegistry.Register(typeof(Quantum.EntityHealth), Quantum.EntityHealth.SIZE);
+      typeRegistry.Register(typeof(Quantum.EntityLevel), Quantum.EntityLevel.SIZE);
       typeRegistry.Register(typeof(EntityPrototypeRef), EntityPrototypeRef.SIZE);
       typeRegistry.Register(typeof(EntityRef), EntityRef.SIZE);
       typeRegistry.Register(typeof(FP), FP.SIZE);
@@ -680,8 +754,10 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 1)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 3)
         .AddBuiltInComponents()
+        .Add<Quantum.EntityHealth>(Quantum.EntityHealth.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.EntityLevel>(Quantum.EntityLevel.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.PlayerLink>(Quantum.PlayerLink.Serialize, null, null, ComponentFlags.None)
         .Finish();
     }
