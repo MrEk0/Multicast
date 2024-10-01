@@ -16,10 +16,19 @@ MonoBehaviour:
     Path: Resources/GameConfig
     Guid:
       Value: 455041549374010728
-  MaxEnemiesCount:
+  _maxEnemiesCount:
     RawValue: 655360
-  MapSize:
+  _maxEnemiesOnAttack:
+    RawValue: 196608
+  _mapSize:
     X:
       RawValue: 2097152
     Y:
       RawValue: 2097152
+  _playerSpawnPoint:
+    X:
+      RawValue: 0
+    Y:
+      RawValue: 131072
+    Z:
+      RawValue: 0

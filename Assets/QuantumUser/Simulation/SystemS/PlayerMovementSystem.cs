@@ -30,7 +30,6 @@ namespace Quantum
             while (filter.Next(out var entity, out var character))
             {
                 character.MaxSpeed = velocity;
-                character.Velocity = FPVector3.One * velocity;
                 f.Set(entity, character);
             }
         }

@@ -126,7 +126,11 @@ namespace Quantum.Menu
                 return;
             }
 
-            if (result.FailReason != ConnectFailReason.ApplicationQuit)
+            if (result.Success)
+            {
+                _activeScreen.Hide();
+            }
+            else if (result.FailReason != ConnectFailReason.ApplicationQuit)
             {
                 var popup = controller.PopupAsync(result.DebugMessage, "Connection Failed");
                 if (result.WaitForCleanup != null)

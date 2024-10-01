@@ -362,9 +362,9 @@ MonoBehaviour:
     RawValue: 0
   RestitutionCombineFunction: 3
   FrictionStatic:
-    RawValue: 39322
+    RawValue: 0
   FrictionDynamic:
-    RawValue: 39322
+    RawValue: 0
   FrictionCombineFunction: 3
 --- !u!114 &7409781275357617604
 MonoBehaviour:
@@ -407,7 +407,7 @@ MonoBehaviour:
   Braking:
     RawValue: 655360
   BaseJumpImpulse:
-    RawValue: 262144
+    RawValue: 0
   MaxSpeed:
     RawValue: 196608
   Gravity:

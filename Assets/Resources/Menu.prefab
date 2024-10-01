@@ -5532,6 +5532,15 @@ MonoBehaviour:
         SystemsConfig:
           Id:
             Value: 0
+        EnemyConfig:
+          Id:
+            Value: 0
+        PlayerConfig:
+          Id:
+            Value: 0
+        GameConfig:
+          Id:
+            Value: 0
     PhotonPluginName: QuantumPlugin
     RuntimePlayers:
     - PlayerAvatar:

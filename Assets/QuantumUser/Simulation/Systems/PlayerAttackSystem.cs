@@ -21,6 +21,9 @@ namespace Quantum
             while (playerFilter.Next(out _, out var playerEntityLevel, out var playerPosition))
             {
                 var entityPosition = filter.Transform3D->Position;
+                entityPosition.Y = 0;
+                playerPosition.Position.Y = 0;
+                
                 var level = playerEntityLevel.AttackRadiusLevel;
 
                 if (FPVector3.Distance(playerPosition.Position, entityPosition) > config.AttackRadius.Value(level))
