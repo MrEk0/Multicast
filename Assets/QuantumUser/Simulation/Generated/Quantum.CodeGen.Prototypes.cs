@@ -67,27 +67,31 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
-  [Quantum.Prototypes.Prototype(typeof(Quantum.EntityLevel))]
-  public unsafe partial class EntityLevelPrototype : ComponentPrototype<Quantum.EntityLevel> {
-    public FP Level;
-    partial void MaterializeUser(Frame frame, ref Quantum.EntityLevel result, in PrototypeMaterializationContext context);
-    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
-        Quantum.EntityLevel component = default;
-        Materialize((Frame)f, ref component, in context);
-        return f.Set(entity, component) == SetResult.ComponentAdded;
-    }
-    public void Materialize(Frame frame, ref Quantum.EntityLevel result, in PrototypeMaterializationContext context = default) {
-        result.Level = this.Level;
-        MaterializeUser(frame, ref result, in context);
-    }
-  }
-  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Input))]
   public unsafe partial class InputPrototype : StructPrototype {
     public FPVector2 Direction;
     partial void MaterializeUser(Frame frame, ref Quantum.Input result, in PrototypeMaterializationContext context);
     public void Materialize(Frame frame, ref Quantum.Input result, in PrototypeMaterializationContext context = default) {
         result.Direction = this.Direction;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.PlayerEntityLevel))]
+  public unsafe partial class PlayerEntityLevelPrototype : ComponentPrototype<Quantum.PlayerEntityLevel> {
+    public FP DamageLevel;
+    public FP AttackRadiusLevel;
+    public FP VelocityLevel;
+    partial void MaterializeUser(Frame frame, ref Quantum.PlayerEntityLevel result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.PlayerEntityLevel component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.PlayerEntityLevel result, in PrototypeMaterializationContext context = default) {
+        result.DamageLevel = this.DamageLevel;
+        result.AttackRadiusLevel = this.AttackRadiusLevel;
+        result.VelocityLevel = this.VelocityLevel;
         MaterializeUser(frame, ref result, in context);
     }
   }

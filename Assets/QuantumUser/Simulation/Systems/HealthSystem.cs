@@ -1,5 +1,4 @@
 using UniRx;
-using Signals;
 
 namespace Quantum
 {
@@ -18,8 +17,8 @@ namespace Quantum
 
             if (health->HealthPoints > 0)
                 return;
-            
-            f.Signals.EntityDied();
+
+            MessageBroker.Default.Publish(new EntityDeathSignal());
             f.Destroy(owner);
         }
     }

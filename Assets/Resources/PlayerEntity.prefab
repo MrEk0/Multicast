@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 5101809638077742568}
   - component: {fileID: 1889919865918601647}
   - component: {fileID: 6349318278359862438}
-  - component: {fileID: 5135276301084110826}
+  - component: {fileID: 4193100786196515613}
   m_Layer: 0
   m_Name: PlayerEntity
   m_TagString: Untagged
@@ -224,7 +224,7 @@ MonoBehaviour:
     Shape3D:
       ShapeType: 1
       SphereRadius:
-        RawValue: 131072
+        RawValue: 65536
       CapsuleRadius:
         RawValue: 0
       CapsuleHeight:
@@ -379,9 +379,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b054e989dc39b8c44ab8409cba31a4c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackCollider: {fileID: 9173606386240854242}
   _playerName: {fileID: 6098771733422768429}
---- !u!114 &5135276301084110826
+--- !u!114 &4193100786196515613
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -390,11 +389,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 516822156427858668}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29cce3d99173e5249af11008d3658074, type: 3}
+  m_Script: {fileID: 11500000, guid: d50b2479cc7cf6b47ab2212070a411c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
-    Level:
+    DamageLevel:
+      RawValue: 0
+    AttackRadiusLevel:
+      RawValue: 0
+    VelocityLevel:
       RawValue: 0
 --- !u!1 &1408820940404946002
 GameObject:

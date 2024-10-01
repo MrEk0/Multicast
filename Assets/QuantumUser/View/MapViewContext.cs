@@ -1,11 +1,13 @@
 using Cinemachine;
 using UnityEngine;
-using Quantum;
 
-public class MapViewContext : MonoBehaviour, IQuantumViewContext
+namespace Quantum
 {
-    [SerializeField] private CinemachineVirtualCameraBase _virtualCamera;
+    public class MapViewContext : MonoBehaviour, IQuantumViewContext
+    {
+        [SerializeField] private CinemachineVirtualCameraBase _virtualCamera;
 
-    public CinemachineVirtualCameraBase VirtualCameraBase => _virtualCamera;
+        public CinemachineVirtualCameraBase VirtualCameraBase => _virtualCamera;
+    }
 }
 

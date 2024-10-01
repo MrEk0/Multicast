@@ -1,5 +1,4 @@
 using Photon.Deterministic;
-using Signals;
 using UniRx;
 using UnityEngine.Scripting;
 
@@ -20,7 +19,7 @@ namespace Quantum
             {
                 transform->Position = new FPVector3(0, 2, 0);//todo redo
             }
-
+            
             MessageBroker.Default.Publish(new PlayerLevelUpSignal(config.Damage.Value(0).AsFloat,
                 config.AttackRadius.Value(0).AsFloat, config.Velocity.Value(0).AsFloat));
         }

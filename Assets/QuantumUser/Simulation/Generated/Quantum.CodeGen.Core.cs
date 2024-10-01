@@ -521,21 +521,29 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
-  public unsafe partial struct EntityLevel : Quantum.IComponent {
-    public const Int32 SIZE = 8;
+  public unsafe partial struct PlayerEntityLevel : Quantum.IComponent {
+    public const Int32 SIZE = 24;
     public const Int32 ALIGNMENT = 8;
+    [FieldOffset(8)]
+    public FP DamageLevel;
     [FieldOffset(0)]
-    public FP Level;
+    public FP AttackRadiusLevel;
+    [FieldOffset(16)]
+    public FP VelocityLevel;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 2857;
-        hash = hash * 31 + Level.GetHashCode();
+        var hash = 1153;
+        hash = hash * 31 + DamageLevel.GetHashCode();
+        hash = hash * 31 + AttackRadiusLevel.GetHashCode();
+        hash = hash * 31 + VelocityLevel.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
-        var p = (EntityLevel*)ptr;
-        FP.Serialize(&p->Level, serializer);
+        var p = (PlayerEntityLevel*)ptr;
+        FP.Serialize(&p->AttackRadiusLevel, serializer);
+        FP.Serialize(&p->DamageLevel, serializer);
+        FP.Serialize(&p->VelocityLevel, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -562,11 +570,15 @@ namespace Quantum {
   public unsafe partial interface ISignalEntityDied : ISignal {
     void EntityDied(Frame f);
   }
+  public unsafe partial interface ISignalPlayerVelocityUpgrade : ISignal {
+    void PlayerVelocityUpgrade(Frame f, FP velocity);
+  }
   public static unsafe partial class Constants {
   }
   public unsafe partial class Frame {
     private ISignalEntityHit[] _ISignalEntityHitSystems;
     private ISignalEntityDied[] _ISignalEntityDiedSystems;
+    private ISignalPlayerVelocityUpgrade[] _ISignalPlayerVelocityUpgradeSystems;
     partial void AllocGen() {
       _globals = (_globals_*)Context.Allocator.AllocAndClear(sizeof(_globals_));
     }
@@ -580,6 +592,7 @@ namespace Quantum {
       Initialize(this, this.SimulationConfig.Entities, 256);
       _ISignalEntityHitSystems = BuildSignalsArray<ISignalEntityHit>();
       _ISignalEntityDiedSystems = BuildSignalsArray<ISignalEntityDied>();
+      _ISignalPlayerVelocityUpgradeSystems = BuildSignalsArray<ISignalPlayerVelocityUpgrade>();
       _ComponentSignalsOnAdded = new ComponentReactiveCallbackInvoker[ComponentTypeId.Type.Length];
       _ComponentSignalsOnRemoved = new ComponentReactiveCallbackInvoker[ComponentTypeId.Type.Length];
       BuildSignalsArrayOnComponentAdded<CharacterController2D>();
@@ -588,8 +601,6 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<CharacterController3D>();
       BuildSignalsArrayOnComponentAdded<Quantum.EntityHealth>();
       BuildSignalsArrayOnComponentRemoved<Quantum.EntityHealth>();
-      BuildSignalsArrayOnComponentAdded<Quantum.EntityLevel>();
-      BuildSignalsArrayOnComponentRemoved<Quantum.EntityLevel>();
       BuildSignalsArrayOnComponentAdded<MapEntityLink>();
       BuildSignalsArrayOnComponentRemoved<MapEntityLink>();
       BuildSignalsArrayOnComponentAdded<NavMeshAvoidanceAgent>();
@@ -616,6 +627,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<PhysicsJoints2D>();
       BuildSignalsArrayOnComponentAdded<PhysicsJoints3D>();
       BuildSignalsArrayOnComponentRemoved<PhysicsJoints3D>();
+      BuildSignalsArrayOnComponentAdded<Quantum.PlayerEntityLevel>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.PlayerEntityLevel>();
       BuildSignalsArrayOnComponentAdded<Quantum.PlayerLink>();
       BuildSignalsArrayOnComponentRemoved<Quantum.PlayerLink>();
       BuildSignalsArrayOnComponentAdded<Transform2D>();
@@ -664,6 +677,15 @@ namespace Quantum {
           }
         }
       }
+      public void PlayerVelocityUpgrade(FP velocity) {
+        var array = _f._ISignalPlayerVelocityUpgradeSystems;
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
+            s.PlayerVelocityUpgrade(_f, velocity);
+          }
+        }
+      }
     }
   }
   public unsafe partial class Statics {
@@ -691,7 +713,6 @@ namespace Quantum {
       typeRegistry.Register(typeof(DistanceJoint), DistanceJoint.SIZE);
       typeRegistry.Register(typeof(DistanceJoint3D), DistanceJoint3D.SIZE);
       typeRegistry.Register(typeof(Quantum.EntityHealth), Quantum.EntityHealth.SIZE);
-      typeRegistry.Register(typeof(Quantum.EntityLevel), Quantum.EntityLevel.SIZE);
       typeRegistry.Register(typeof(EntityPrototypeRef), EntityPrototypeRef.SIZE);
       typeRegistry.Register(typeof(EntityRef), EntityRef.SIZE);
       typeRegistry.Register(typeof(FP), FP.SIZE);
@@ -736,6 +757,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(PhysicsJoints3D), PhysicsJoints3D.SIZE);
       typeRegistry.Register(typeof(PhysicsQueryRef), PhysicsQueryRef.SIZE);
       typeRegistry.Register(typeof(PhysicsSceneSettings), PhysicsSceneSettings.SIZE);
+      typeRegistry.Register(typeof(Quantum.PlayerEntityLevel), Quantum.PlayerEntityLevel.SIZE);
       typeRegistry.Register(typeof(Quantum.PlayerLink), Quantum.PlayerLink.SIZE);
       typeRegistry.Register(typeof(PlayerRef), PlayerRef.SIZE);
       typeRegistry.Register(typeof(Ptr), Ptr.SIZE);
@@ -757,7 +779,7 @@ namespace Quantum {
       ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 3)
         .AddBuiltInComponents()
         .Add<Quantum.EntityHealth>(Quantum.EntityHealth.Serialize, null, null, ComponentFlags.None)
-        .Add<Quantum.EntityLevel>(Quantum.EntityLevel.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.PlayerEntityLevel>(Quantum.PlayerEntityLevel.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.PlayerLink>(Quantum.PlayerLink.Serialize, null, null, ComponentFlags.None)
         .Finish();
     }

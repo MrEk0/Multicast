@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 8537610}
   - component: {fileID: 8537613}
   - component: {fileID: 8537612}
+  - component: {fileID: 8537614}
   m_Layer: 0
   m_Name: QuantumEntityViewUpdater
   m_TagString: Untagged
@@ -205,6 +206,18 @@ MonoBehaviour:
   _hidePooledObjectsInHierarchy: 1
   _resetGameObjectScale: 0
   _precacheObjects: []
+--- !u!114 &8537614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8537609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dc5517ed1da92649b0cf3a65ffcc649, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &45943435
 GameObject:
   m_ObjectHideFlags: 0
@@ -1351,8 +1364,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1630944952}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2222,69 +2234,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1599986862}
   m_CullTransparentMesh: 1
---- !u!1 &1630944951
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1630944952}
-  - component: {fileID: 1630944953}
-  m_Layer: 0
-  m_Name: NavMesh
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1630944952
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1630944951}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 867454763}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1630944953
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1630944951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e9121d5c86efee4faaf33c31a8ff549, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NavMeshSurfaces:
-  - {fileID: 701716029}
-  Settings:
-    WeldIdenticalVertices: 1
-    WeldVertexEpsilon: 0.0001
-    DelaunayTriangulation: 0
-    DelaunayTriangulationRestrictToPlanes: 0
-    FixTrianglesOnEdges: 1
-    FixTrianglesOnEdgesEpsilon: 1e-45
-    FixTrianglesOnEdgesHeightEpsilon: 0.05
-    LinkErrorCorrection: 0
-    ClosestTriangleCalculation: 1
-    ClosestTriangleCalculationDepth: 3
-    EnableQuantum_XY: 0
-    MinAgentRadius:
-      RawValue: 16384
-    ImportRegions: 1
-    RegionDetectionMargin: 0.4
-    RegionAreaIds: 
 --- !u!1 &1743721534
 GameObject:
   m_ObjectHideFlags: 0
@@ -2580,7 +2529,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1815877036}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

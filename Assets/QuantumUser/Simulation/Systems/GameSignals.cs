@@ -1,15 +1,20 @@
-namespace Signals
+namespace Quantum
 {
     public struct UpgradeButtonClickSignal
     {
         
     }
+    
+    public struct EntityDeathSignal
+    {
+        
+    }
 
-    public struct EnemyDeathSignal
+    public struct EnemyKillsChange
     {
         public int DeathCount { get; private set; }
 
-        public EnemyDeathSignal(int currentDeath)
+        public EnemyKillsChange(int currentDeath)
         {
             DeathCount = currentDeath;
         }

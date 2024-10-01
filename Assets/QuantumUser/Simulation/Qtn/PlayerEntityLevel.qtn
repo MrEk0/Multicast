@@ -1,0 +1,6 @@
+component PlayerEntityLevel
+{
+    FP DamageLevel;
+    FP AttackRadiusLevel;
+    FP VelocityLevel;
+}
