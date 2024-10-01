@@ -521,6 +521,24 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct EntityName : Quantum.IComponent {
+    public const Int32 SIZE = 8;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(0)]
+    public FP nameIndex;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 7919;
+        hash = hash * 31 + nameIndex.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (EntityName*)ptr;
+        FP.Serialize(&p->nameIndex, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct PlayerEntityLevel : Quantum.IComponent {
     public const Int32 SIZE = 24;
     public const Int32 ALIGNMENT = 8;
@@ -601,6 +619,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<CharacterController3D>();
       BuildSignalsArrayOnComponentAdded<Quantum.EntityHealth>();
       BuildSignalsArrayOnComponentRemoved<Quantum.EntityHealth>();
+      BuildSignalsArrayOnComponentAdded<Quantum.EntityName>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.EntityName>();
       BuildSignalsArrayOnComponentAdded<MapEntityLink>();
       BuildSignalsArrayOnComponentRemoved<MapEntityLink>();
       BuildSignalsArrayOnComponentAdded<NavMeshAvoidanceAgent>();
@@ -713,6 +733,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(DistanceJoint), DistanceJoint.SIZE);
       typeRegistry.Register(typeof(DistanceJoint3D), DistanceJoint3D.SIZE);
       typeRegistry.Register(typeof(Quantum.EntityHealth), Quantum.EntityHealth.SIZE);
+      typeRegistry.Register(typeof(Quantum.EntityName), Quantum.EntityName.SIZE);
       typeRegistry.Register(typeof(EntityPrototypeRef), EntityPrototypeRef.SIZE);
       typeRegistry.Register(typeof(EntityRef), EntityRef.SIZE);
       typeRegistry.Register(typeof(FP), FP.SIZE);
@@ -776,9 +797,10 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 3)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 4)
         .AddBuiltInComponents()
         .Add<Quantum.EntityHealth>(Quantum.EntityHealth.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.EntityName>(Quantum.EntityName.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.PlayerEntityLevel>(Quantum.PlayerEntityLevel.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.PlayerLink>(Quantum.PlayerLink.Serialize, null, null, ComponentFlags.None)
         .Finish();

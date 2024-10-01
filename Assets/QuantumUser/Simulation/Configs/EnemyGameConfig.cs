@@ -10,9 +10,9 @@ namespace Quantum
         [Serializable]
         public class EnemyConfig
         {
-            [SerializeField] public string _name;
-            [SerializeField] public AssetRef<EntityPrototype> _enemyPrototype;
-            [SerializeField] public FP _health;
+            [SerializeField] private string _name;
+            [SerializeField] private AssetRef<EntityPrototype> _enemyPrototype;
+            [SerializeField] private FP _health;
 
             public string Name => _name;
             public AssetRef<EntityPrototype> EnemyPrototype => _enemyPrototype;

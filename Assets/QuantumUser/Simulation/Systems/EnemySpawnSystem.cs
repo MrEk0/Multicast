@@ -22,10 +22,10 @@ namespace Quantum
             var config = enemyConfig.EnemiesConfig[index];
             var prototype = config.EnemyPrototype;
                 
-            SpawnEnemy(f, gameConfig, config.Health, prototype);
+            SpawnEnemy(f, gameConfig, index, config.Health, prototype);
         }
 
-        private void SpawnEnemy(Frame f, GameConfig config, FP healthPoints, AssetRef<EntityPrototype> prototype)
+        private void SpawnEnemy(Frame f, GameConfig config, FP index, FP healthPoints, AssetRef<EntityPrototype> prototype)
         {
             var spawnPosition = new FPVector2(f.RNG->Next(-config.MapExtends.X, config.MapExtends.X),
                 f.RNG->Next(-config.MapExtends.Y, config.MapExtends.Y));
@@ -42,6 +42,10 @@ namespace Quantum
             health.HealthPoints = healthPoints;
             health.MaxHealthPoints = healthPoints;
             f.Set(enemy, health);
+
+            var name = f.Get<EntityName>(enemy);
+            name.nameIndex = index;
+            f.Set(enemy, name);
         }
 
         private bool IsOutOfBounds(FPVector2 position, FPVector2 mapExtends, out FPVector2 newPosition)

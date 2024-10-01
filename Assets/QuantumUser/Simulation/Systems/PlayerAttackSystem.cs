@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Quantum
 {
     using Photon.Deterministic;
@@ -20,7 +18,7 @@ namespace Quantum
             var config = f.FindAsset(f.RuntimeConfig.PlayerConfig);
            
             var playerFilter = f.Filter<PlayerEntityLevel, Transform3D>();
-            while (playerFilter.Next(out var entity, out var playerEntityLevel, out var playerPosition))
+            while (playerFilter.Next(out _, out var playerEntityLevel, out var playerPosition))
             {
                 var entityPosition = filter.Transform3D->Position;
                 var level = playerEntityLevel.AttackRadiusLevel;
