@@ -17,8 +17,9 @@ namespace Quantum
 
             if (health->HealthPoints > 0)
                 return;
-
-            MessageBroker.Default.Publish(new EntityDeathSignal());
+            
+            f.Events.EntityDied(f, owner);
+            f.Signals.EntityDied(owner);
             f.Destroy(owner);
         }
     }

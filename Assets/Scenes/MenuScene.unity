@@ -506,6 +506,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7243461719588803421, guid: 77a22a3d59fda4b4f80c469fca57f098, type: 3}
+      propertyPath: ConnectArgs.SessionConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 4e4e1b59f00117446b98e4db30a6a7b6, type: 2}
+    - target: {fileID: 7243461719588803421, guid: 77a22a3d59fda4b4f80c469fca57f098, type: 3}
+      propertyPath: ConnectArgs.ServerSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: 7dd743530833f544ba81418f1fcb732b, type: 2}
+    - target: {fileID: 7243461719588803421, guid: 77a22a3d59fda4b4f80c469fca57f098, type: 3}
       propertyPath: ConnectArgs.RuntimePlayers.Array.data[0].PlayerAvatar.Id.Value
       value: 1524830750762776952
       objectReference: {fileID: 0}

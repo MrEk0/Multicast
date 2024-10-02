@@ -1,3 +1,11 @@
 signal EntityHit(EntityRef owner, FP damage);
-signal EntityDied();
+signal EntityDied(EntityRef entity);
+
 signal PlayerVelocityUpgrade(FP velocity);
+signal PlayerAttackRadiusUpgrade(EntityRef player, FPVector3 position);
+
+synced event EntityDied
+{
+    Frame frame;
+    EntityRef entity;
+}

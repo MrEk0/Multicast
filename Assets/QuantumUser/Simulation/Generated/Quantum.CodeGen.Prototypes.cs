@@ -50,6 +50,29 @@ namespace Quantum.Prototypes {
   #endif //;
   
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.AttackTargets))]
+  public unsafe class AttackTargetsPrototype : ComponentPrototype<Quantum.AttackTargets> {
+    [DynamicCollectionAttribute()]
+    public MapEntityId[] Enemies = {};
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.AttackTargets component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.AttackTargets result, in PrototypeMaterializationContext context = default) {
+        if (this.Enemies.Length == 0) {
+          result.Enemies = default;
+        } else {
+          var list = frame.AllocateList(out result.Enemies, this.Enemies.Length);
+          for (int i = 0; i < this.Enemies.Length; ++i) {
+            EntityRef tmp = default;
+            PrototypeValidator.FindMapEntity(this.Enemies[i], in context, out tmp);
+            list.Add(tmp);
+          }
+        }
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.EntityHealth))]
   public unsafe partial class EntityHealthPrototype : ComponentPrototype<Quantum.EntityHealth> {
     public FP MaxHealthPoints;

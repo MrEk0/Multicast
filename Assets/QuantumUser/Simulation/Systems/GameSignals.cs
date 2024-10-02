@@ -4,11 +4,6 @@ namespace Quantum
     {
         
     }
-    
-    public struct EntityDeathSignal
-    {
-        
-    }
 
     public struct EnemyKillsChange
     {
