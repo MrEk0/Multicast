@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 8537611}
   - component: {fileID: 8537610}
   - component: {fileID: 8537613}
+  - component: {fileID: 8537614}
   m_Layer: 0
   m_Name: QuantumEntityViewUpdater
   m_TagString: Untagged
@@ -191,6 +192,19 @@ MonoBehaviour:
   _hidePooledObjectsInHierarchy: 1
   _resetGameObjectScale: 0
   _precacheObjects: []
+--- !u!114 &8537614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8537609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69930cc01f258b540bc7a45ef602681e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 963194227}
 --- !u!1 &45943435
 GameObject:
   m_ObjectHideFlags: 0
@@ -1748,7 +1762,7 @@ MonoBehaviour:
       Id:
         Value: 1524830750762776952
     PlayerNickname: Player 1
-  MaxPlayerCount: 2
+  MaxPlayerCount: 0
   SimulationSpeedMultiplier: 1
   DisplaySaveAndReloadButton: 0
   PreloadAddressables: 0
