@@ -14,7 +14,7 @@ namespace Quantum
             [SerializeField] private FP _upgradeChance;
 
             public FP Value(FP level) => _initialValue + _upgradeStep * level;
-            public FP UpgradeChance => _upgradeChance;
+            public float UpgradeChance => _upgradeChance.AsFloat;
         }
 
         [SerializeField] private SettingParameters _velocity;

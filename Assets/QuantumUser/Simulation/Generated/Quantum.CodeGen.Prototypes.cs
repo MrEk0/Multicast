@@ -115,25 +115,6 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
-  [Quantum.Prototypes.Prototype(typeof(Quantum.PlayerEntityLevel))]
-  public unsafe partial class PlayerEntityLevelPrototype : ComponentPrototype<Quantum.PlayerEntityLevel> {
-    public FP DamageLevel;
-    public FP AttackRadiusLevel;
-    public FP VelocityLevel;
-    partial void MaterializeUser(Frame frame, ref Quantum.PlayerEntityLevel result, in PrototypeMaterializationContext context);
-    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
-        Quantum.PlayerEntityLevel component = default;
-        Materialize((Frame)f, ref component, in context);
-        return f.Set(entity, component) == SetResult.ComponentAdded;
-    }
-    public void Materialize(Frame frame, ref Quantum.PlayerEntityLevel result, in PrototypeMaterializationContext context = default) {
-        result.DamageLevel = this.DamageLevel;
-        result.AttackRadiusLevel = this.AttackRadiusLevel;
-        result.VelocityLevel = this.VelocityLevel;
-        MaterializeUser(frame, ref result, in context);
-    }
-  }
-  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.PlayerLink))]
   public unsafe partial class PlayerLinkPrototype : ComponentPrototype<Quantum.PlayerLink> {
     public PlayerRef Player;
@@ -145,6 +126,27 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.PlayerLink result, in PrototypeMaterializationContext context = default) {
         result.Player = this.Player;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.PlayerStats))]
+  public unsafe partial class PlayerStatsPrototype : ComponentPrototype<Quantum.PlayerStats> {
+    public FP DamageLevel;
+    public FP AttackRadiusLevel;
+    public FP VelocityLevel;
+    public FP KillCount;
+    partial void MaterializeUser(Frame frame, ref Quantum.PlayerStats result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.PlayerStats component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.PlayerStats result, in PrototypeMaterializationContext context = default) {
+        result.DamageLevel = this.DamageLevel;
+        result.AttackRadiusLevel = this.AttackRadiusLevel;
+        result.VelocityLevel = this.VelocityLevel;
+        result.KillCount = this.KillCount;
         MaterializeUser(frame, ref result, in context);
     }
   }

@@ -564,32 +564,6 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
-  public unsafe partial struct PlayerEntityLevel : Quantum.IComponent {
-    public const Int32 SIZE = 24;
-    public const Int32 ALIGNMENT = 8;
-    [FieldOffset(8)]
-    public FP DamageLevel;
-    [FieldOffset(0)]
-    public FP AttackRadiusLevel;
-    [FieldOffset(16)]
-    public FP VelocityLevel;
-    public override Int32 GetHashCode() {
-      unchecked { 
-        var hash = 1153;
-        hash = hash * 31 + DamageLevel.GetHashCode();
-        hash = hash * 31 + AttackRadiusLevel.GetHashCode();
-        hash = hash * 31 + VelocityLevel.GetHashCode();
-        return hash;
-      }
-    }
-    public static void Serialize(void* ptr, FrameSerializer serializer) {
-        var p = (PlayerEntityLevel*)ptr;
-        FP.Serialize(&p->AttackRadiusLevel, serializer);
-        FP.Serialize(&p->DamageLevel, serializer);
-        FP.Serialize(&p->VelocityLevel, serializer);
-    }
-  }
-  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct PlayerLink : Quantum.IComponent {
     public const Int32 SIZE = 4;
     public const Int32 ALIGNMENT = 4;
@@ -607,17 +581,47 @@ namespace Quantum {
         PlayerRef.Serialize(&p->Player, serializer);
     }
   }
+  [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct PlayerStats : Quantum.IComponent {
+    public const Int32 SIZE = 32;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(8)]
+    public FP DamageLevel;
+    [FieldOffset(0)]
+    public FP AttackRadiusLevel;
+    [FieldOffset(24)]
+    public FP VelocityLevel;
+    [FieldOffset(16)]
+    public FP KillCount;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 14797;
+        hash = hash * 31 + DamageLevel.GetHashCode();
+        hash = hash * 31 + AttackRadiusLevel.GetHashCode();
+        hash = hash * 31 + VelocityLevel.GetHashCode();
+        hash = hash * 31 + KillCount.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (PlayerStats*)ptr;
+        FP.Serialize(&p->AttackRadiusLevel, serializer);
+        FP.Serialize(&p->DamageLevel, serializer);
+        FP.Serialize(&p->KillCount, serializer);
+        FP.Serialize(&p->VelocityLevel, serializer);
+    }
+  }
   public unsafe partial interface ISignalEntityHit : ISignal {
-    void EntityHit(Frame f, EntityRef owner, FP damage);
+    void EntityHit(Frame f, EntityRef owner, EntityRef attacker, FP damage);
   }
   public unsafe partial interface ISignalEntityDied : ISignal {
-    void EntityDied(Frame f, EntityRef entity);
+    void EntityDied(Frame f, EntityRef deadEntity, EntityRef killer);
   }
   public unsafe partial interface ISignalPlayerVelocityUpgrade : ISignal {
     void PlayerVelocityUpgrade(Frame f, FP velocity);
   }
-  public unsafe partial interface ISignalPlayerAttackRadiusUpgrade : ISignal {
-    void PlayerAttackRadiusUpgrade(Frame f, EntityRef player, FPVector3 position);
+  public unsafe partial interface ISignalPlayerToUpgrade : ISignal {
+    void PlayerToUpgrade(Frame f, EntityRef entity);
   }
   public static unsafe partial class Constants {
   }
@@ -625,7 +629,7 @@ namespace Quantum {
     private ISignalEntityHit[] _ISignalEntityHitSystems;
     private ISignalEntityDied[] _ISignalEntityDiedSystems;
     private ISignalPlayerVelocityUpgrade[] _ISignalPlayerVelocityUpgradeSystems;
-    private ISignalPlayerAttackRadiusUpgrade[] _ISignalPlayerAttackRadiusUpgradeSystems;
+    private ISignalPlayerToUpgrade[] _ISignalPlayerToUpgradeSystems;
     partial void AllocGen() {
       _globals = (_globals_*)Context.Allocator.AllocAndClear(sizeof(_globals_));
     }
@@ -640,7 +644,7 @@ namespace Quantum {
       _ISignalEntityHitSystems = BuildSignalsArray<ISignalEntityHit>();
       _ISignalEntityDiedSystems = BuildSignalsArray<ISignalEntityDied>();
       _ISignalPlayerVelocityUpgradeSystems = BuildSignalsArray<ISignalPlayerVelocityUpgrade>();
-      _ISignalPlayerAttackRadiusUpgradeSystems = BuildSignalsArray<ISignalPlayerAttackRadiusUpgrade>();
+      _ISignalPlayerToUpgradeSystems = BuildSignalsArray<ISignalPlayerToUpgrade>();
       _ComponentSignalsOnAdded = new ComponentReactiveCallbackInvoker[ComponentTypeId.Type.Length];
       _ComponentSignalsOnRemoved = new ComponentReactiveCallbackInvoker[ComponentTypeId.Type.Length];
       BuildSignalsArrayOnComponentAdded<Quantum.AttackTargets>();
@@ -679,10 +683,10 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<PhysicsJoints2D>();
       BuildSignalsArrayOnComponentAdded<PhysicsJoints3D>();
       BuildSignalsArrayOnComponentRemoved<PhysicsJoints3D>();
-      BuildSignalsArrayOnComponentAdded<Quantum.PlayerEntityLevel>();
-      BuildSignalsArrayOnComponentRemoved<Quantum.PlayerEntityLevel>();
       BuildSignalsArrayOnComponentAdded<Quantum.PlayerLink>();
       BuildSignalsArrayOnComponentRemoved<Quantum.PlayerLink>();
+      BuildSignalsArrayOnComponentAdded<Quantum.PlayerStats>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.PlayerStats>();
       BuildSignalsArrayOnComponentAdded<Transform2D>();
       BuildSignalsArrayOnComponentRemoved<Transform2D>();
       BuildSignalsArrayOnComponentAdded<Transform2DVertical>();
@@ -711,21 +715,21 @@ namespace Quantum {
       Physics3D.Init(_globals->PhysicsState3D.MapStaticCollidersState.TrackedMap);
     }
     public unsafe partial struct FrameSignals {
-      public void EntityHit(EntityRef owner, FP damage) {
+      public void EntityHit(EntityRef owner, EntityRef attacker, FP damage) {
         var array = _f._ISignalEntityHitSystems;
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
           if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
-            s.EntityHit(_f, owner, damage);
+            s.EntityHit(_f, owner, attacker, damage);
           }
         }
       }
-      public void EntityDied(EntityRef entity) {
+      public void EntityDied(EntityRef deadEntity, EntityRef killer) {
         var array = _f._ISignalEntityDiedSystems;
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
           if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
-            s.EntityDied(_f, entity);
+            s.EntityDied(_f, deadEntity, killer);
           }
         }
       }
@@ -738,12 +742,12 @@ namespace Quantum {
           }
         }
       }
-      public void PlayerAttackRadiusUpgrade(EntityRef player, FPVector3 position) {
-        var array = _f._ISignalPlayerAttackRadiusUpgradeSystems;
+      public void PlayerToUpgrade(EntityRef entity) {
+        var array = _f._ISignalPlayerToUpgradeSystems;
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
           if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
-            s.PlayerAttackRadiusUpgrade(_f, player, position);
+            s.PlayerToUpgrade(_f, entity);
           }
         }
       }
@@ -822,9 +826,9 @@ namespace Quantum {
       typeRegistry.Register(typeof(PhysicsJoints3D), PhysicsJoints3D.SIZE);
       typeRegistry.Register(typeof(PhysicsQueryRef), PhysicsQueryRef.SIZE);
       typeRegistry.Register(typeof(PhysicsSceneSettings), PhysicsSceneSettings.SIZE);
-      typeRegistry.Register(typeof(Quantum.PlayerEntityLevel), Quantum.PlayerEntityLevel.SIZE);
       typeRegistry.Register(typeof(Quantum.PlayerLink), Quantum.PlayerLink.SIZE);
       typeRegistry.Register(typeof(PlayerRef), PlayerRef.SIZE);
+      typeRegistry.Register(typeof(Quantum.PlayerStats), Quantum.PlayerStats.SIZE);
       typeRegistry.Register(typeof(Ptr), Ptr.SIZE);
       typeRegistry.Register(typeof(QBoolean), QBoolean.SIZE);
       typeRegistry.Register(typeof(Quantum.Ptr), Quantum.Ptr.SIZE);
@@ -846,8 +850,8 @@ namespace Quantum {
         .Add<Quantum.AttackTargets>(Quantum.AttackTargets.Serialize, null, Quantum.AttackTargets.OnRemoved, ComponentFlags.None)
         .Add<Quantum.EntityHealth>(Quantum.EntityHealth.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.EntityName>(Quantum.EntityName.Serialize, null, null, ComponentFlags.None)
-        .Add<Quantum.PlayerEntityLevel>(Quantum.PlayerEntityLevel.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.PlayerLink>(Quantum.PlayerLink.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.PlayerStats>(Quantum.PlayerStats.Serialize, null, null, ComponentFlags.None)
         .Finish();
     }
     [Preserve()]

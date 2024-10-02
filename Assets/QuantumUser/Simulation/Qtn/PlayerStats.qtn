@@ -1,6 +1,7 @@
-component PlayerEntityLevel
+component PlayerStats
 {
     FP DamageLevel;
     FP AttackRadiusLevel;
     FP VelocityLevel;
+    FP KillCount;
 }

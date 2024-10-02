@@ -1,20 +1,19 @@
 using TMPro;
+using UniRx;
 using UnityEngine;
 
 namespace Quantum
 {
-    public class PlayerEntityView : QuantumViewComponent<MapViewContext>
+    public class PlayerEntityView : QuantumEntityViewComponent
     {
         [SerializeField] private TMP_Text _playerName;
         [SerializeField] private QuantumEntityPrototype _entityPrototype;
-        
+
+        private readonly CompositeDisposable _disposable = new();
+
         public override void OnActivate(Frame frame)
         {
-            var tr = transform;
-            ViewContext.VirtualCameraBase.Follow = tr;
-            ViewContext.VirtualCameraBase.LookAt = tr;
-
-            var playerLevel = PredictedFrame.Get<PlayerEntityLevel>(_entityView.EntityRef);
+            var playerLevel = PredictedFrame.Get<PlayerStats>(_entityView.EntityRef);
             var config = PredictedFrame.FindAsset(PredictedFrame.RuntimeConfig.PlayerConfig);
             
             _entityPrototype.PhysicsCollider.IsEnabled = true;
@@ -25,6 +24,16 @@ namespace Quantum
             var playerLink = PredictedFrame.Get<PlayerLink>(_entityView.EntityRef);
             var playerData = PredictedFrame.GetPlayerData(playerLink.Player);
             _playerName.text = playerData.PlayerNickname;
+
+            MessageBroker.Default.Receive<UpgradeButtonClickSignal>().Subscribe(_ =>
+            {
+                frame.Signals.PlayerToUpgrade(_entityView.EntityRef);
+            }).AddTo(_disposable);
+        }
+
+        public override void OnDeactivate()
+        {
+            _disposable.Dispose();
         }
     }
 }

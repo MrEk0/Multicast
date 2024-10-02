@@ -10,7 +10,6 @@ namespace Quantum
         public struct Filter
         {
             public EntityRef Entity;
-            public Transform3D* Transform3D;
             public CharacterController3D* Controller3D;
             public PlayerLink* PlayerLink;
         }
@@ -20,7 +19,7 @@ namespace Quantum
             var input = f.GetPlayerInput(filter.PlayerLink->Player);
 
             var direction = input->Direction.Normalized;
-
+            
             filter.Controller3D->Move(f, filter.Entity, direction.XOY);
         }
 

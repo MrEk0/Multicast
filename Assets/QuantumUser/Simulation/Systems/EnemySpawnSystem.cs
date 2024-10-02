@@ -63,7 +63,7 @@ namespace Quantum
             return true;
         }
 
-        public void EntityDied(Frame f, EntityRef entity)
+        public void EntityDied(Frame f, EntityRef deadEntity, EntityRef killer)
         {
             var gameConfig = f.FindAsset(f.RuntimeConfig.GameConfig);
 

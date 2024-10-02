@@ -1,5 +1,3 @@
-using UniRx;
-
 namespace Quantum
 {
     using Photon.Deterministic;
@@ -8,7 +6,7 @@ namespace Quantum
     [Preserve]
     public unsafe class HealthSystem : SystemSignalsOnly, ISignalEntityHit
     {
-        public void EntityHit(Frame f, EntityRef owner, FP damage)
+        public void EntityHit(Frame f, EntityRef owner, EntityRef attacker, FP damage)
         {
             if (!f.Unsafe.TryGetPointer<EntityHealth>(owner, out var health))
                 return;
@@ -19,7 +17,7 @@ namespace Quantum
                 return;
             
             f.Events.EntityDied(f, owner);
-            f.Signals.EntityDied(owner);
+            f.Signals.EntityDied(owner, attacker);
             f.Destroy(owner);
         }
     }
