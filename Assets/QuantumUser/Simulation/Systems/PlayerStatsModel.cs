@@ -8,14 +8,11 @@ namespace Quantum
     public class PlayerStatsModel
     {
         public FP DamageLevel { get; private set; } = FP._0;
-
         public FP AttackRadiusLevel { get; private set; } = FP._0;
-
         public FP VelocityLevel { get; private set; } = FP._0;
-
-        private FP KillsCount { get; set; } = FP._0;
-
         public IReadOnlyList<EntityRef> AttackTargets => _attackTargets;
+
+        private FP _killsCount = FP._0;
 
         private readonly List<EntityRef> _attackTargets = new();
 
@@ -40,13 +37,13 @@ namespace Quantum
             _attackTargets.Remove(entity);
         }
 
-        public void OnEntityDied(EventEntityDied e)
+        public void ChangeKillCount(EntityRef entity)
         {
-            KillsCount += 1;
+            _killsCount += 1;
 
-            _attackTargets.Remove(e.entity);
+            _attackTargets.Remove(entity);
             
-            MessageBroker.Default.Publish(new EnemyKillsChange(KillsCount.AsInt));
+            MessageBroker.Default.Publish(new EnemyKillsChange(_killsCount.AsInt));
         }
         
         public FP GetMaxDistanceEntity(Frame frame, FPVector3 playerPosition)

@@ -15,8 +15,8 @@ namespace Quantum
 
             if (health->HealthPoints > 0)
                 return;
-            
-            f.Events.EntityDied(f, owner);
+
+            f.Events.EntityDied(f, owner, attacker);
             f.Signals.EntityDied(owner, attacker);
             f.Destroy(owner);
         }

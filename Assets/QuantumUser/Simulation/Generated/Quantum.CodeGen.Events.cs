@@ -90,11 +90,12 @@ namespace Quantum {
         _f.AddEvent(ev);
         return ev;
       }
-      public EventEntityDied EntityDied(Frame frame, EntityRef entity) {
+      public EventEntityDied EntityDied(Frame frame, EntityRef entity, EntityRef killer) {
         if (_f.IsPredicted) return null;
         var ev = _f.Context.AcquireEvent<EventEntityDied>(EventEntityDied.ID);
         ev.frame = frame;
         ev.entity = entity;
+        ev.killer = killer;
         _f.AddEvent(ev);
         return ev;
       }
@@ -181,6 +182,7 @@ namespace Quantum {
     public new const Int32 ID = 4;
     public Frame frame;
     public EntityRef entity;
+    public EntityRef killer;
     protected EventEntityDied(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
@@ -200,6 +202,7 @@ namespace Quantum {
         var hash = 53;
         hash = hash * 31 + frame.GetHashCode();
         hash = hash * 31 + entity.GetHashCode();
+        hash = hash * 31 + killer.GetHashCode();
         return hash;
       }
     }

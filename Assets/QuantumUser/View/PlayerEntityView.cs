@@ -42,7 +42,7 @@ namespace Quantum
             MessageBroker.Default.Receive<UpgradeButtonClickSignal>().Subscribe(OnUpgradeButtonClicked).AddTo(_disposable);
             MessageBroker.Default.Publish(new PlayerLevelUpSignal(config.Damage.Value(_model.DamageLevel).AsFloat, config.AttackRadius.Value(_model.AttackRadiusLevel).AsFloat, config.Velocity.Value(_model.VelocityLevel).AsFloat));
 
-            _subscriptions.Add(QuantumEvent.Subscribe(listener: this, handler: (EventEntityDied e) => _model.OnEntityDied(e)));
+            _subscriptions.Add(QuantumEvent.Subscribe(listener: this, handler: (EventEntityDied e) => OnEntityKilled(e)));
             _subscriptions.Add(QuantumEvent.Subscribe(listener: this, handler: (EventOnPlayerEntityTriggerEnter e) => OnPlayerEntityTriggerEnter(e.other)));
             _subscriptions.Add(QuantumEvent.Subscribe(listener: this, handler: (EventOnPlayerEntityTriggerExit e) => OnPlayerEntityTriggerExit(e.other)));
             _subscriptions.Add(QuantumEvent.Subscribe(listener: this, handler: (EventOnPlayerEntityTriggerStay e) => OnPlayerEntityTriggerStay(e.other, e.entity)));
@@ -64,6 +64,14 @@ namespace Quantum
             var tr = transform;
             ViewContext.CharacterCamera.transform.position = tr.position + _cameraOffset;
             ViewContext.CharacterCamera.transform.LookAt(tr);
+        }
+
+        private void OnEntityKilled(EventEntityDied e)
+        {
+            if (e.killer != _entityView.EntityRef)
+                return;
+
+            _model.ChangeKillCount(e.entity);
         }
 
         private void OnUpgradeButtonClicked(UpgradeButtonClickSignal signal)

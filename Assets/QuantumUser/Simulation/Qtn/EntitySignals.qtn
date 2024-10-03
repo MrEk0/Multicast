@@ -23,4 +23,5 @@ synced event EntityDied
 {
     Frame frame;
     EntityRef entity;
+    EntityRef killer;
 }
