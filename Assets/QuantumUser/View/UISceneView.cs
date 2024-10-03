@@ -36,7 +36,7 @@ namespace Quantum
 
         private void OnPlayerLevelUp(PlayerLevelUpSignal signal)
         {
-            _velocityText.text = string.Format($"{signal.Velocity:F0}");
+            _velocityText.text = string.Format($"{signal.Velocity:F1}");
             _attackRadiusText.text = string.Format($"{signal.AttackRadius:F0}");
             _damageText.text = string.Format($"{signal.Damage:F0}");
         }

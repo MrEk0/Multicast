@@ -49,18 +49,6 @@ namespace Quantum.Prototypes.Unity {
   using RuntimeInitializeOnLoadMethodAttribute = UnityEngine.RuntimeInitializeOnLoadMethodAttribute;
   #endif //;
   
-  [System.SerializableAttribute()]
-  public unsafe partial class AttackTargetsPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.AttackTargetsPrototype> {
-    [DynamicCollectionAttribute()]
-    public Quantum.QuantumEntityPrototype[] Enemies = {};
-    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.AttackTargetsPrototype prototype);
-    public override Quantum.Prototypes.AttackTargetsPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
-      var result = new Quantum.Prototypes.AttackTargetsPrototype();
-      converter.Convert(this.Enemies, out result.Enemies);
-      ConvertUser(converter, ref result);
-      return result;
-    }
-  }
 }
 #pragma warning restore 0109
 #pragma warning restore 1591

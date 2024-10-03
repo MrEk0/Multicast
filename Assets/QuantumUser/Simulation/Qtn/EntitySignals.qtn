@@ -2,7 +2,22 @@ signal EntityHit(EntityRef owner, EntityRef attacker, FP damage);
 signal EntityDied(EntityRef deadEntity, EntityRef killer);
 
 signal PlayerVelocityUpgrade(FP velocity);
-signal PlayerToUpgrade(EntityRef entity);
+
+synced event OnPlayerEntityTriggerEnter
+{
+    EntityRef other;
+}
+
+synced event OnPlayerEntityTriggerExit
+{
+    EntityRef other;
+}
+
+synced event OnPlayerEntityTriggerStay
+{
+    EntityRef other;
+    EntityRef entity;
+}
 
 synced event EntityDied
 {

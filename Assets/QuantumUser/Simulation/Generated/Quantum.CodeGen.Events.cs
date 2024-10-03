@@ -52,7 +52,7 @@ namespace Quantum {
   public unsafe partial class Frame {
     public unsafe partial struct FrameEvents {
       static partial void GetEventTypeCountCodeGen(ref Int32 eventCount) {
-        eventCount = 2;
+        eventCount = 5;
       }
       static partial void GetParentEventIDCodeGen(Int32 eventID, ref Int32 parentEventID) {
         switch (eventID) {
@@ -61,9 +61,34 @@ namespace Quantum {
       }
       static partial void GetEventTypeCodeGen(Int32 eventID, ref System.Type result) {
         switch (eventID) {
+          case EventOnPlayerEntityTriggerEnter.ID: result = typeof(EventOnPlayerEntityTriggerEnter); return;
+          case EventOnPlayerEntityTriggerExit.ID: result = typeof(EventOnPlayerEntityTriggerExit); return;
+          case EventOnPlayerEntityTriggerStay.ID: result = typeof(EventOnPlayerEntityTriggerStay); return;
           case EventEntityDied.ID: result = typeof(EventEntityDied); return;
           default: break;
         }
+      }
+      public EventOnPlayerEntityTriggerEnter OnPlayerEntityTriggerEnter(EntityRef other) {
+        if (_f.IsPredicted) return null;
+        var ev = _f.Context.AcquireEvent<EventOnPlayerEntityTriggerEnter>(EventOnPlayerEntityTriggerEnter.ID);
+        ev.other = other;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventOnPlayerEntityTriggerExit OnPlayerEntityTriggerExit(EntityRef other) {
+        if (_f.IsPredicted) return null;
+        var ev = _f.Context.AcquireEvent<EventOnPlayerEntityTriggerExit>(EventOnPlayerEntityTriggerExit.ID);
+        ev.other = other;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventOnPlayerEntityTriggerStay OnPlayerEntityTriggerStay(EntityRef other, EntityRef entity) {
+        if (_f.IsPredicted) return null;
+        var ev = _f.Context.AcquireEvent<EventOnPlayerEntityTriggerStay>(EventOnPlayerEntityTriggerStay.ID);
+        ev.other = other;
+        ev.entity = entity;
+        _f.AddEvent(ev);
+        return ev;
       }
       public EventEntityDied EntityDied(Frame frame, EntityRef entity) {
         if (_f.IsPredicted) return null;
@@ -75,14 +100,13 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventEntityDied : EventBase {
+  public unsafe partial class EventOnPlayerEntityTriggerEnter : EventBase {
     public new const Int32 ID = 1;
-    public Frame frame;
-    public EntityRef entity;
-    protected EventEntityDied(Int32 id, EventFlags flags) : 
+    public EntityRef other;
+    protected EventOnPlayerEntityTriggerEnter(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
-    public EventEntityDied() : 
+    public EventOnPlayerEntityTriggerEnter() : 
         base(1, EventFlags.Server|EventFlags.Client|EventFlags.Synced) {
     }
     public new QuantumGame Game {
@@ -96,6 +120,84 @@ namespace Quantum {
     public override Int32 GetHashCode() {
       unchecked {
         var hash = 41;
+        hash = hash * 31 + other.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventOnPlayerEntityTriggerExit : EventBase {
+    public new const Int32 ID = 2;
+    public EntityRef other;
+    protected EventOnPlayerEntityTriggerExit(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventOnPlayerEntityTriggerExit() : 
+        base(2, EventFlags.Server|EventFlags.Client|EventFlags.Synced) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 43;
+        hash = hash * 31 + other.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventOnPlayerEntityTriggerStay : EventBase {
+    public new const Int32 ID = 3;
+    public EntityRef other;
+    public EntityRef entity;
+    protected EventOnPlayerEntityTriggerStay(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventOnPlayerEntityTriggerStay() : 
+        base(3, EventFlags.Server|EventFlags.Client|EventFlags.Synced) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 47;
+        hash = hash * 31 + other.GetHashCode();
+        hash = hash * 31 + entity.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventEntityDied : EventBase {
+    public new const Int32 ID = 4;
+    public Frame frame;
+    public EntityRef entity;
+    protected EventEntityDied(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventEntityDied() : 
+        base(4, EventFlags.Server|EventFlags.Client|EventFlags.Synced) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 53;
         hash = hash * 31 + frame.GetHashCode();
         hash = hash * 31 + entity.GetHashCode();
         return hash;

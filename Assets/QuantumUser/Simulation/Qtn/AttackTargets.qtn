@@ -1,4 +1,0 @@
-component AttackTargets
-{
-    list<EntityRef> Enemies;
-}

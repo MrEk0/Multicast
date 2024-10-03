@@ -91,9 +91,8 @@ GameObject:
   - component: {fileID: 9173606386240854242}
   - component: {fileID: 5101809638077742568}
   - component: {fileID: 1889919865918601647}
-  - component: {fileID: 6930971473316218786}
-  - component: {fileID: 6710763906106980516}
   - component: {fileID: 121072804103086405}
+  - component: {fileID: 4208255249549399032}
   m_Layer: 0
   m_Name: PlayerEntity
   m_TagString: Untagged
@@ -368,41 +367,6 @@ MonoBehaviour:
     Config:
       Id:
         Value: 63537014040815386
---- !u!114 &6930971473316218786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 516822156427858668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd31b811b91b4064792a850c912a8e07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Prototype:
-    Enemies: []
---- !u!114 &6710763906106980516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 516822156427858668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7bc11659b206504a98fcc0fa018923c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Prototype:
-    DamageLevel:
-      RawValue: 0
-    AttackRadiusLevel:
-      RawValue: 0
-    VelocityLevel:
-      RawValue: 0
-    KillCount:
-      RawValue: 0
 --- !u!114 &121072804103086405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,8 +380,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerName: {fileID: 6098771733422768429}
-  _entityPrototype: {fileID: 9173606386240854242}
+  _collider: {fileID: 4208255249549399032}
   _cameraOffset: {x: 0, y: 17, z: -4}
+--- !u!135 &4208255249549399032
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516822156427858668}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1408820940404946002
 GameObject:
   m_ObjectHideFlags: 0
